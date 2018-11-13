@@ -24,6 +24,7 @@
   "dependencies": {
     "@hkube/etcd-adapter": "^1.0.4",
     "@hkube/fs-adapter": "^1.0.6",
+    "@hkube/logger": "^1.0.15",
     "@hkube/redis-storage-adapter": "^1.0.2",
     "@hkube/s3-adapter": "^1.0.36",
     "moment": "^2.22.2"
