@@ -50,7 +50,7 @@ describe('s3-adapter', () => {
         await storageManager.put({ jobId, taskId: uuid(), data: 'gal-gadot' });
         const today = moment().format(storageManager.DateFormat);
         const res = await storageManager.list({ Path: path.join(today, jobId) });
-        expect(res[today].length).to.equal(4);
+        expect(res.length).to.equal(4);
     });
     it('delete', async () => {
         const jobId = uuid();
