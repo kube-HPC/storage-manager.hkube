@@ -59,7 +59,7 @@ describe('s3-adapter', () => {
         await storageManager.put({ jobId, taskId: uuid(), data: 'gal-gadot' });
         await storageManager.put({ jobId, taskId: uuid(), data: 'gal-gadot' });
         const today = moment().format(storageManager.DateFormat);
-        const res = await storageManager.delete({ Path: path.join(today, jobId) });
+        const res = await storageManager.delete({ Path: path.join('hkube', today, jobId) });
         expect(res.Deleted.length).to.equal(4);
     });
 });
