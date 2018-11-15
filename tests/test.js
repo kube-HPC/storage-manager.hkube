@@ -1,5 +1,4 @@
 const storageManager = require('../lib/storage-manager');
-const prefixes = require('../consts/storage-prefix').STORAGE_PREFIX;
 const { expect } = require('chai');
 const uuid = require('uuid/v4');
 const path = require('path');
@@ -20,8 +19,7 @@ describe('s3-adapter', () => {
                 moduleName: process.env.STORAGE_MODULE || '@hkube/s3-adapter'
             }
         };
-
-        await storageManager.init(config, null, prefixes, true);
+        await storageManager.init(config, true);
     });
     it('get and put string', async () => {
         const jobId = uuid();
