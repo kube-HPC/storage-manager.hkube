@@ -4,6 +4,7 @@ const path = require('path');
 const moment = require('moment');
 const fs = require('fs-extra');
 const mockery = require('mockery');
+const { STORAGE_PREFIX } = require('../consts/storage-prefix');
 const baseDir = '';
 
 let storageManager;
@@ -72,6 +73,9 @@ describe('fs-adapter', () => {
         await storageManager.delete({ Path: path.join('hkube', today, jobId) });
         const res1 = await fs.pathExists(path.join(baseDir, link.Path));
         expect(res1).to.equal(false);
+    });
+    after(() => {
+        Object.values(STORAGE_PREFIX).forEach(dir => fs.removeSync(path.join(baseDir, dir)));
     });
 });
 
