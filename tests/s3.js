@@ -70,5 +70,18 @@ describe('s3-adapter', () => {
         const res = await storageManager.delete({ Path: path.join('hkube', today, jobId) });
         expect(res.Deleted.length).to.equal(4);
     });
+    it('metadata', async () => {
+        const jobId = uuid();
+        await storageManager.putExecution({ jobId, date: Date.now(), data: 'gal-gadot' });
+        const exec = await storageManager.listExecution({ jobId });
+        const res = await storageManager.get(exec[0]);
+
+        await storageManager.putMetadata({ jobId, taskId: uuid(), date: res.date, data: 'gal-gadot' });  // eslint-disable-line
+        await storageManager.putMetadata({ jobId, taskId: uuid(), date: res.date, data: 'gal-gadot' });  // eslint-disable-line
+        await storageManager.putMetadata({ jobId, taskId: uuid(), date: res.date, data: 'gal-gadot' });  // eslint-disable-line
+        await storageManager.putMetadata({ jobId, taskId: uuid(), date: res.date, data: 'gal-gadot' });  // eslint-disable-line
+        const result = await storageManager.listMetadata({ jobId, date: res.date });
+        expect(result.length).to.equal(4);
+    });
 });
 
