@@ -22,10 +22,10 @@
   "author": "tal",
   "license": "ISC",
   "dependencies": {
-    "@hkube/etcd-adapter": "^1.0.4",
-    "@hkube/fs-adapter": "^1.0.8",
+    "@hkube/etcd-adapter": "^1.0.5",
+    "@hkube/fs-adapter": "^1.0.10",
     "@hkube/logger": "^1.0.15",
-    "@hkube/redis-storage-adapter": "^1.0.2",
+    "@hkube/redis-storage-adapter": "^1.0.4",
     "@hkube/s3-adapter": "^1.0.41",
     "moment": "^2.22.2"
   },
@@ -36,8 +36,10 @@
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-chai-friendly": "^0.4.1",
     "eslint-plugin-import": "^2.14.0",
+    "fs-extra": "^7.0.1",
     "istanbul": "^1.1.0-alpha.1",
     "mocha": "^5.2.0",
+    "mockery": "^2.1.0",
     "pre-commit": "^1.2.2",
     "sinon": "^4.5.0",
     "uuid": "^3.3.2"
