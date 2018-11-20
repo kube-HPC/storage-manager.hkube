@@ -76,11 +76,11 @@ describe('s3-adapter', () => {
         const exec = await storageManager.listExecution({ jobId });
         const res = await storageManager.get(exec[0]);
 
-        await storageManager.putMetadata({ jobId, taskId: uuid(), date: res.date, data: 'gal-gadot' });  // eslint-disable-line
-        await storageManager.putMetadata({ jobId, taskId: uuid(), date: res.date, data: 'gal-gadot' });  // eslint-disable-line
-        await storageManager.putMetadata({ jobId, taskId: uuid(), date: res.date, data: 'gal-gadot' });  // eslint-disable-line
-        await storageManager.putMetadata({ jobId, taskId: uuid(), date: res.date, data: 'gal-gadot' });  // eslint-disable-line
-        const result = await storageManager.listMetadata({ jobId, date: res.date });
+        await storageManager.putMetadata({ jobId, taskId: `gal:${uuid()}`, date: res.date, data: 'gal-gadot' });  // eslint-disable-line
+        await storageManager.putMetadata({ jobId, taskId: `gal:${uuid()}`, date: res.date, data: 'gal-gadot' });  // eslint-disable-line
+        await storageManager.putMetadata({ jobId, taskId: `gal:${uuid()}`, date: res.date, data: 'gal-gadot' });  // eslint-disable-line
+        await storageManager.putMetadata({ jobId, taskId: `gal:${uuid()}`, date: res.date, data: 'gal-gadot' });  // eslint-disable-line
+        const result = await storageManager.listMetadata({ jobId, date: res.date, nodeName: 'gal' });
         expect(result.length).to.equal(4);
     });
 });
