@@ -5,7 +5,7 @@ const moment = require('moment');
 const mockery = require('mockery');
 let storageManager;
 
-describe('etcd-adapter', () => {
+xdescribe('etcd-adapter', () => {
     before(async () => {
         mockery.enable({
             warnOnReplace: false,

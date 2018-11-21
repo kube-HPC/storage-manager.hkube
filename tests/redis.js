@@ -5,7 +5,7 @@ const moment = require('moment');
 const mockery = require('mockery');
 let storageManager;
 
-describe('redis-adapter', () => {
+xdescribe('redis-adapter', () => {
     before(async () => {
         mockery.enable({
             warnOnReplace: false,

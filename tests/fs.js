@@ -9,7 +9,7 @@ const baseDir = '';
 
 let storageManager;
 
-describe('fs-adapter', () => {
+xdescribe('fs-adapter', () => {
     before(async () => {
         mockery.enable({
             warnOnReplace: false,
