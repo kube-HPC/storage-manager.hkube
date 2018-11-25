@@ -28,52 +28,52 @@ describe('storage-manager tests', () => {
             describe(adapter + ':base', () => {
                 it('get and put string', async () => {
                     const storageInfo = await storageManager.put({
-                        Path: path.join('hkube/', uuid(), uuid()),
-                        Data: 'gal-gadot'
+                        path: path.join('hkube/', uuid(), uuid()),
+                        data: 'gal-gadot'
                     });
                     const res = await storageManager.get(storageInfo);
                     expect('gal-gadot').to.equal(res);
                 });
                 it('get and put object', async () => {
                     const storageInfo = await storageManager.put({
-                        Path: path.join('hkube/', uuid(), uuid()),
-                        Data: { test: 'gal-gadot' }
+                        path: path.join('hkube/', uuid(), uuid()),
+                        data: { test: 'gal-gadot' }
                     });
                     const res = await storageManager.get(storageInfo);
                     expect({ test: 'gal-gadot' }).to.deep.equal(res);
                 });
                 it('get and put array', async () => {
                     const storageInfo = await storageManager.put({
-                        Path: path.join('hkube/', uuid(), uuid()),
-                        Data: [1, 2, 3]
+                        path: path.join('hkube/', uuid(), uuid()),
+                        data: [1, 2, 3]
                     });
                     const res = await storageManager.get(storageInfo);
                     expect([1, 2, 3]).to.deep.equal(res);
                 });
                 it('list', async () => {
                     const jobId = uuid();
-                    await storageManager.put({ Path: path.join('hkube/', jobId, uuid()), Data: 'gal-gadot' });
-                    await storageManager.put({ Path: path.join('hkube/', jobId, uuid()), Data: 'gal-gadot' });
-                    await storageManager.put({ Path: path.join('hkube/', jobId, uuid()), Data: 'gal-gadot' });
-                    await storageManager.put({ Path: path.join('hkube/', jobId, uuid()), Data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
 
-                    const res = await storageManager.list({ Path: path.join('hkube', jobId) });
+                    const res = await storageManager.list({ path: path.join('hkube', jobId) });
                     expect(res.length).to.equal(4);
                 });
                 it('delete', async () => {
                     const jobId = uuid();
-                    await storageManager.put({ Path: path.join('hkube/', jobId, uuid()), Data: 'gal-gadot' });
-                    await storageManager.put({ Path: path.join('hkube/', jobId, uuid()), Data: 'gal-gadot' });
-                    await storageManager.put({ Path: path.join('hkube/', jobId, uuid()), Data: 'gal-gadot' });
-                    await storageManager.put({ Path: path.join('hkube/', jobId, uuid()), Data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
 
-                    const keys = await storageManager.list({ Path: path.join('hkube/', jobId) });
+                    const keys = await storageManager.list({ path: path.join('hkube/', jobId) });
                     const promiessArray = [];
                     keys.forEach((key) => {
                         promiessArray.push(storageManager.delete(key));
                     });
                     await Promise.all(promiessArray);
-                    const keysAfter = await storageManager.list({ Path: path.join('hkube/', jobId) });
+                    const keysAfter = await storageManager.list({ path: path.join('hkube/', jobId) });
                     expect(keysAfter.length).to.equal(0);
                 });
             });
