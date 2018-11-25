@@ -1,6 +1,6 @@
 {
   "name": "@hkube/storage-manager",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "description": "storage manager",
   "main": "index.js",
   "scripts": {
