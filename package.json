@@ -22,7 +22,7 @@
   "author": "tal",
   "license": "ISC",
   "dependencies": {
-    "@hkube/etcd-adapter": "^1.0.8",
+    "@hkube/etcd-adapter": "^1.0.9",
     "@hkube/fs-adapter": "^1.0.15",
     "@hkube/logger": "^1.0.15",
     "@hkube/redis-storage-adapter": "^1.0.8",
