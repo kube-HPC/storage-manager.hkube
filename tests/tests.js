@@ -3,6 +3,7 @@ const uuid = require('uuid/v4');
 const path = require('path');
 const mockery = require('mockery');
 const adapters = ['s3', 'fs', 'redis', 'etcd'];
+
 const fs = require('fs-extra');
 const { STORAGE_PREFIX } = require('../consts/storage-prefix');
 const baseDir = '';
@@ -76,6 +77,17 @@ describe('storage-manager tests', () => {
                     const keysAfter = await storageManager.list({ path: path.join('hkube/', jobId) });
                     expect(keysAfter.length).to.equal(0);
                 });
+                it('delete by prefix', async () => {
+                    const jobId = uuid();
+                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.delete({ path: path.join('hkube/', jobId) });
+
+                    const keys = await storageManager.list({ path: path.join('hkube/', jobId) });
+                    expect(keys.length).to.equal(0);
+                });
             });
             describe(adapter + ':hkube-index', () => {
                 it('put and get', async () => {
@@ -96,6 +108,13 @@ describe('storage-manager tests', () => {
                     await storageManager.hkubeIndex.delete({ date: Date.now(), jobId });
                     const o = await storageManager.hkubeIndex.get({ date: Date.now(), jobId });
                     expect(o.error).to.be.not.undefined;
+                });
+                it('delete by prefix', async () => {
+                    const jobId = uuid();
+                    await storageManager.hkubeIndex.put({ jobId });
+                    await storageManager.hkubeIndex.delete({ date: Date.now() });
+                    const keys = await storageManager.hkubeIndex.list({ date: Date.now() });
+                    expect(keys.length).to.equal(0);
                 });
             });
             describe(adapter + ':hkube', () => {
@@ -152,6 +171,21 @@ describe('storage-manager tests', () => {
                     await storageManager.hkube.delete({ jobId, taskId: taskArray[1] });
                     await storageManager.hkube.delete({ jobId, taskId: taskArray[2] });
                     await storageManager.hkube.delete({ jobId, taskId: taskArray[3] });
+                    const keysAfter = await storageManager.hkube.list({ jobId });
+                    expect(keysAfter.length).to.equal(0);
+                });
+                it('delete by prefix', async () => {
+                    const jobId = uuid();
+                    const taskArray = [uuid(), uuid(), uuid(), uuid()];
+                    await storageManager.hkube.put({ jobId, taskId: taskArray[0], data: 'gal-gadot' });
+                    await storageManager.hkube.put({ jobId, taskId: taskArray[1], data: 'gal-gadot' });
+                    await storageManager.hkube.put({ jobId, taskId: taskArray[2], data: 'gal-gadot' });
+                    await storageManager.hkube.put({ jobId, taskId: taskArray[3], data: 'gal-gadot' });
+
+                    const keys = await storageManager.hkube.list({ jobId });
+                    expect(keys.length).to.equal(4);
+
+                    await storageManager.hkube.delete({ jobId });
                     const keysAfter = await storageManager.hkube.list({ jobId });
                     expect(keysAfter.length).to.equal(0);
                 });
@@ -341,6 +375,16 @@ describe('storage-manager tests', () => {
                     expect(keys.length).to.equal(1);
                     await storageManager.hkubeMetadata.delete({ jobId, taskId: 'green' + taskId });
                     const keysAfter = await storageManager.hkubeMetadata.list({ jobId, nodeName: 'green' });
+                    expect(keysAfter.length).to.equal(0);
+                });
+                it('delete by prefix', async () => {
+                    const jobId = uuid();
+                    const taskId = uuid();
+                    await storageManager.hkubeMetadata.put({ jobId, taskId: 'green' + taskId, data: 'gal-gadot' });// eslint-disable-line
+                    const keys = await storageManager.hkubeMetadata.list({ jobId, nodeName: 'green' });
+                    expect(keys.length).to.equal(1);
+                    await storageManager.hkubeMetadata.delete({ jobId });
+                    const keysAfter = await storageManager.hkubeMetadata.list({ jobId });
                     expect(keysAfter.length).to.equal(0);
                 });
             });

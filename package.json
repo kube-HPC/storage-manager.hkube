@@ -25,7 +25,7 @@
     "@hkube/etcd-adapter": "^1.0.8",
     "@hkube/fs-adapter": "^1.0.15",
     "@hkube/logger": "^1.0.15",
-    "@hkube/redis-storage-adapter": "^1.0.7",
+    "@hkube/redis-storage-adapter": "^1.0.8",
     "@hkube/s3-adapter": "^1.0.46",
     "moment": "^2.23.0",
     "performance-now": "^2.1.0"
