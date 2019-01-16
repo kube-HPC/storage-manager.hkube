@@ -5,6 +5,7 @@ module.exports = {
         HKUBE_METADATA: 'hkube-metadata',
         HKUBE_STORE: 'hkube-store',
         HKUBE_EXECUTION: 'hkube-execution',
-        HKUBE_INDEX: 'hkube-index'
+        HKUBE_INDEX: 'hkube-index',
+        HKUBE_BUILDS: 'hkube-builds'
     }
 };
