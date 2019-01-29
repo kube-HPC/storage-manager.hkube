@@ -103,7 +103,7 @@ describe('storage-manager tests', () => {
                     const res = await storageManager.hkubeIndex.list({ date: Date.now() });
                     expect(res).to.be.not.undefined;
                 });
-                it.only('list by prefixes', async () => {
+                it('list by prefixes', async () => {
                     await storageManager.hkubeIndex.put({ jobId: 'delimiter-test' });
                     const res = await storageManager.hkubeIndex.listPrefixes();
                     expect(res.includes(moment().format('YYYY-MM-DD'))).to.be.true;
