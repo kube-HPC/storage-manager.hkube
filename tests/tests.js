@@ -2,6 +2,7 @@ const { expect } = require('chai');
 const uuid = require('uuid/v4');
 const path = require('path');
 const mockery = require('mockery');
+const moment = require('moment');
 const adapters = ['s3', 'fs', 'redis', 'etcd'];
 
 const fs = require('fs-extra');
@@ -102,13 +103,18 @@ describe('storage-manager tests', () => {
                     const res = await storageManager.hkubeIndex.list({ date: Date.now() });
                     expect(res).to.be.not.undefined;
                 });
+                it.only('list by prefixes', async () => {
+                    await storageManager.hkubeIndex.put({ jobId: 'delimiter-test' });
+                    const res = await storageManager.hkubeIndex.listPrefixes();
+                    expect(res.includes(moment().format('YYYY-MM-DD'))).to.be.true;
+                });
                 it('delete', async () => {
                     const jobId = uuid();
                     await storageManager.hkubeIndex.put({ jobId });
                     await storageManager.hkubeIndex.delete({ date: Date.now(), jobId });
                     const o = await storageManager.hkubeIndex.get({ date: Date.now(), jobId });
                     expect(o.error).to.be.not.undefined;
-                });
+                }); Date.now();
                 it('delete by prefix', async () => {
                     const jobId = uuid();
                     await storageManager.hkubeIndex.put({ jobId });
