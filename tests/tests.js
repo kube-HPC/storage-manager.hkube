@@ -112,9 +112,15 @@ describe('storage-manager tests', () => {
                     const jobId = uuid();
                     await storageManager.hkubeIndex.put({ jobId });
                     await storageManager.hkubeIndex.delete({ date: Date.now(), jobId });
-                    const o = await storageManager.hkubeIndex.get({ date: Date.now(), jobId });
-                    expect(o.error).to.be.not.undefined;
-                }); Date.now();
+                    try {
+                        await storageManager.hkubeIndex.get({ date: Date.now(), jobId });
+                    }
+                    catch (err) {
+                        expect(err).to.be.instanceOf(Error);
+                        return;
+                    }
+                    expect.fail(null, null, 'did not reject with an error');
+                });
                 it('delete by prefix', async () => {
                     const jobId = uuid();
                     await storageManager.hkubeIndex.put({ jobId });
