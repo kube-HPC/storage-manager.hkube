@@ -21,11 +21,10 @@ describe('storage-manager tests', () => {
                     useCleanCache: true
                 });
                 mockery.resetCache();
-                mockery.registerSubstitute('@hkube/logger', process.cwd() + '/tests/mock/log.js');
                 storageManager = require('../lib/storage-manager'); // eslint-disable-line
                 const config = require('./config'); // eslint-disable-line
                 config.defaultStorage = adapter;
-                await storageManager.init(config, true);
+                await storageManager.init(config, null, true);
             });
             describe(adapter + ':base', () => {
                 it('get and put string', async () => {
