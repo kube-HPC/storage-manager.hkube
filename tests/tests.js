@@ -4,11 +4,10 @@ const path = require('path');
 const mockery = require('mockery');
 const moment = require('moment');
 const adapters = ['s3', 'fs', 'redis', 'etcd'];
-
+const config = require('./config'); // eslint-disable-line
 const fs = require('fs-extra');
 const { STORAGE_PREFIX } = require('../consts/storage-prefix');
 const baseDir = '';
-
 let storageManager;
 
 describe('storage-manager tests', () => {
@@ -22,14 +21,13 @@ describe('storage-manager tests', () => {
                 });
                 mockery.resetCache();
                 storageManager = require('../lib/storage-manager'); // eslint-disable-line
-                const config = require('./config'); // eslint-disable-line
                 config.defaultStorage = adapter;
                 await storageManager.init(config, null, true);
             });
             describe(adapter + ':base', () => {
                 it('get and put string', async () => {
                     const storageInfo = await storageManager.put({
-                        path: path.join('hkube/', uuid(), uuid()),
+                        path: path.join(config.clusterName + '-hkube/', uuid(), uuid()),
                         data: 'gal-gadot'
                     });
                     const res = await storageManager.get(storageInfo);
@@ -37,7 +35,7 @@ describe('storage-manager tests', () => {
                 });
                 it('get and put object', async () => {
                     const storageInfo = await storageManager.put({
-                        path: path.join('hkube/', uuid(), uuid()),
+                        path: path.join(config.clusterName + '-hkube/', uuid(), uuid()),
                         data: { test: 'gal-gadot' }
                     });
                     const res = await storageManager.get(storageInfo);
@@ -45,7 +43,7 @@ describe('storage-manager tests', () => {
                 });
                 it('get and put array', async () => {
                     const storageInfo = await storageManager.put({
-                        path: path.join('hkube/', uuid(), uuid()),
+                        path: path.join(config.clusterName + '-hkube/', uuid(), uuid()),
                         data: [1, 2, 3]
                     });
                     const res = await storageManager.get(storageInfo);
@@ -53,39 +51,39 @@ describe('storage-manager tests', () => {
                 });
                 it('list', async () => {
                     const jobId = uuid();
-                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
-                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
-                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
-                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join(config.clusterName + '-hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join(config.clusterName + '-hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join(config.clusterName + '-hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join(config.clusterName + '-hkube/', jobId, uuid()), data: 'gal-gadot' });
 
-                    const res = await storageManager.list({ path: path.join('hkube', jobId) });
+                    const res = await storageManager.list({ path: path.join(config.clusterName + '-hkube', jobId) });
                     expect(res.length).to.equal(4);
                 });
                 it('delete', async () => {
                     const jobId = uuid();
-                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
-                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
-                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
-                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join(config.clusterName + '-hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join(config.clusterName + '-hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join(config.clusterName + '-hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join(config.clusterName + '-hkube/', jobId, uuid()), data: 'gal-gadot' });
 
-                    const keys = await storageManager.list({ path: path.join('hkube/', jobId) });
+                    const keys = await storageManager.list({ path: path.join(config.clusterName + '-hkube/', jobId) });
                     const promiessArray = [];
                     keys.forEach((key) => {
                         promiessArray.push(storageManager.delete(key));
                     });
                     await Promise.all(promiessArray);
-                    const keysAfter = await storageManager.list({ path: path.join('hkube/', jobId) });
+                    const keysAfter = await storageManager.list({ path: path.join(config.clusterName + '-hkube/', jobId) });
                     expect(keysAfter.length).to.equal(0);
                 });
                 it('delete by prefix', async () => {
                     const jobId = uuid();
-                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
-                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
-                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
-                    await storageManager.put({ path: path.join('hkube/', jobId, uuid()), data: 'gal-gadot' });
-                    await storageManager.delete({ path: path.join('hkube/', jobId) });
+                    await storageManager.put({ path: path.join(config.clusterName + '-hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join(config.clusterName + '-hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join(config.clusterName + '-hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.put({ path: path.join(config.clusterName + '-hkube/', jobId, uuid()), data: 'gal-gadot' });
+                    await storageManager.delete({ path: path.join(config.clusterName + '-hkube/', jobId) });
 
-                    const keys = await storageManager.list({ path: path.join('hkube/', jobId) });
+                    const keys = await storageManager.list({ path: path.join(config.clusterName + '-hkube/', jobId) });
                     expect(keys.length).to.equal(0);
                 });
             });
@@ -402,6 +400,8 @@ describe('storage-manager tests', () => {
         });
     });
     after(() => {
-        Object.values(STORAGE_PREFIX).forEach(dir => fs.removeSync(path.join(baseDir, dir)));
+        const config = require('./config'); // eslint-disable-line
+        const sp = Object.values(STORAGE_PREFIX).map(x => config.clusterName + '-' + x);
+        Object.values(sp).forEach(dir => fs.removeSync(path.join(baseDir, dir)));
     });
 });
