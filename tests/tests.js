@@ -100,6 +100,12 @@ describe('storage-manager tests', () => {
                     const res = await storageManager.hkubeIndex.list({ date: Date.now() });
                     expect(res).to.be.not.undefined;
                 });
+                it('list without date', async () => {
+                    const jobId = uuid();
+                    await storageManager.hkubeIndex.put({ jobId });
+                    const res = await storageManager.hkubeIndex.list({  });
+                    expect(res).to.be.not.undefined;
+                });
                 it('list by prefixes', async () => {
                     await storageManager.hkubeIndex.put({ jobId: 'delimiter-test' });
                     const res = await storageManager.hkubeIndex.listPrefixes();
