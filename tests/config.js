@@ -2,7 +2,7 @@ const config = {};
 config.serviceName = 'storage-manager-test';
 config.defaultStorage = process.env.DEFAULT_STORAGE || 's3';
 const useSentinel = !!process.env.REDIS_SENTINEL_SERVICE_HOST;
-const baseDir = '';
+const baseDir = 'tests/baseDir/';
 
 config.redis = {
     host: useSentinel ? process.env.REDIS_SENTINEL_SERVICE_HOST : process.env.REDIS_SERVICE_HOST || 'localhost',
@@ -46,5 +46,6 @@ config.storageAdapters = {
         moduleName: process.env.STORAGE_MODULE || '@hkube/fs-adapter'
     }
 };
+
 
 module.exports = config;

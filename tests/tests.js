@@ -3,15 +3,21 @@ const uuid = require('uuid/v4');
 const path = require('path');
 const mockery = require('mockery');
 const moment = require('moment');
-const adapters = ['s3', 'fs', 'redis', 'etcd'];
 const config = require('./config'); // eslint-disable-line
+const adapters = [
+    { adapter: 's3', name: 's3' },
+    { adapter: 'fs', name: 'fs' },
+    { adapter: 'fs', name: 'fs-binary' , localConfig: {...config, fs: {...config.fs,binary: true} } },
+    { adapter: 'redis', name: 'redis' }, 
+    { adapter: 'etcd', name: 'etcd' }
+    ];
 const fs = require('fs-extra');
 const { STORAGE_PREFIX } = require('../consts/storage-prefix');
-const baseDir = '';
+const baseDir = config.fs.baseDirectory;
 let storageManager;
 
 describe('storage-manager tests', () => {
-    adapters.forEach((adapter) => {
+    adapters.forEach(({adapter, name, localConfig }) => {
         describe('put get delete list', () => {
             before(async () => {
                 mockery.enable({
@@ -21,10 +27,12 @@ describe('storage-manager tests', () => {
                 });
                 mockery.resetCache();
                 storageManager = require('../lib/storage-manager'); // eslint-disable-line
-                config.defaultStorage = adapter;
-                await storageManager.init(config, null, true);
+                const configNow = localConfig || config
+                configNow.storageAdapters[adapter].connection=configNow[adapter]
+                configNow.defaultStorage = adapter;
+                await storageManager.init(configNow, null, true);
             });
-            describe(adapter + ':base', () => {
+            describe(name + ':base', () => {
                 it('get and put string', async () => {
                     const storageInfo = await storageManager.put({
                         path: path.join(config.clusterName + '-hkube/', uuid(), uuid()),
@@ -87,7 +95,7 @@ describe('storage-manager tests', () => {
                     expect(keys.length).to.equal(0);
                 });
             });
-            describe(adapter + ':hkube-index', () => {
+            describe(name + ':hkube-index', () => {
                 it('put and get', async () => {
                     const jobId = uuid();
                     await storageManager.hkubeIndex.put({ jobId });
@@ -103,7 +111,7 @@ describe('storage-manager tests', () => {
                 it('list without date', async () => {
                     const jobId = uuid();
                     await storageManager.hkubeIndex.put({ jobId });
-                    const res = await storageManager.hkubeIndex.list({  });
+                    const res = await storageManager.hkubeIndex.list({});
                     expect(res).to.be.not.undefined;
                 });
                 it('list by prefixes', async () => {
@@ -132,7 +140,7 @@ describe('storage-manager tests', () => {
                     expect(keys.length).to.equal(0);
                 });
             });
-            describe(adapter + ':hkube', () => {
+            describe(name + ':hkube', () => {
                 it('get and put string', async () => {
                     const jobId = uuid();
                     const taskId = uuid();
@@ -205,7 +213,7 @@ describe('storage-manager tests', () => {
                     expect(keysAfter.length).to.equal(0);
                 });
             });
-            describe(adapter + ':hkube-results', () => {
+            describe(name + ':hkube-results', () => {
                 it('get and put string', async () => {
                     const jobId = uuid();
                     const storageInfo = await storageManager.hkubeResults.put({ jobId, data: 'gal-gadot' });
@@ -248,7 +256,7 @@ describe('storage-manager tests', () => {
                     expect(keysAfter.length).to.equal(0);
                 });
             });
-            describe(adapter + ':hkube-store', () => {
+            describe(name + ':hkube-store', () => {
                 it('get and put string', async () => {
                     const type = uuid();
                     const name = uuid();
@@ -304,7 +312,7 @@ describe('storage-manager tests', () => {
                     expect(keysAfter.length).to.equal(0);
                 });
             });
-            describe(adapter + ':hkube-executions', () => {
+            describe(name + ':hkube-executions', () => {
                 it('get and put string', async () => {
                     const jobId = uuid();
                     const storageInfo = await storageManager.hkubeExecutions.put({ jobId, data: 'gal-gadot' });
@@ -345,7 +353,7 @@ describe('storage-manager tests', () => {
                     expect(keysAfter.length).to.equal(0);
                 });
             });
-            describe(adapter + ':hkube-metadata', () => {
+            describe(name + ':hkube-metadata', () => {
                 it('get and put string', async () => {
                     const jobId = uuid();
                     const taskId = uuid();
