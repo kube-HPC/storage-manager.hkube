@@ -6,6 +6,7 @@ const moment = require('moment');
 const config = require('./config'); // eslint-disable-line
 const adapters = [
     { adapter: 's3', name: 's3' },
+    { adapter: 's3', name: 's3-binary', localConfig: {...config, s3: {...config.s3,binary: true} } },
     { adapter: 'fs', name: 'fs' },
     { adapter: 'fs', name: 'fs-binary' , localConfig: {...config, fs: {...config.fs,binary: true} } },
     { adapter: 'redis', name: 'redis' }, 
