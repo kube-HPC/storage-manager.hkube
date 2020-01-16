@@ -23,10 +23,10 @@
   "license": "MIT",
   "dependencies": {
     "@hkube/etcd-adapter": "^1.0.11",
-    "@hkube/fs-adapter": "^1.0.29",
+    "@hkube/fs-adapter": "^1.0.30",
     "@hkube/logger": "^1.0.25",
     "@hkube/redis-storage-adapter": "^1.0.10",
-    "@hkube/s3-adapter": "^1.0.56",
+    "@hkube/s3-adapter": "^1.0.57",
     "moment": "^2.24.0",
     "performance-now": "^2.1.0"
   },
