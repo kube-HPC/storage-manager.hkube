@@ -6,19 +6,19 @@ const moment = require('moment');
 const config = require('./config'); // eslint-disable-line
 const adapters = [
     { adapter: 's3', name: 's3' },
-    { adapter: 's3', name: 's3-binary', localConfig: {...config, s3: {...config.s3,binary: true} } },
+    { adapter: 's3', name: 's3-binary', localConfig: { ...config, s3: { ...config.s3, binary: true } } },
     { adapter: 'fs', name: 'fs' },
-    { adapter: 'fs', name: 'fs-binary' , localConfig: {...config, fs: {...config.fs,binary: true} } },
-    { adapter: 'redis', name: 'redis' }, 
+    { adapter: 'fs', name: 'fs-binary', localConfig: { ...config, fs: { ...config.fs, binary: true } } },
+    { adapter: 'redis', name: 'redis' },
     { adapter: 'etcd', name: 'etcd' }
-    ];
+];
 const fs = require('fs-extra');
 const { STORAGE_PREFIX } = require('../consts/storage-prefix');
 const baseDir = config.fs.baseDirectory;
 let storageManager;
 
 describe('storage-manager tests', () => {
-    adapters.forEach(({adapter, name, localConfig }) => {
+    adapters.forEach(({ adapter, name, localConfig }) => {
         describe('put get delete list', () => {
             before(async () => {
                 mockery.enable({
@@ -29,7 +29,7 @@ describe('storage-manager tests', () => {
                 mockery.resetCache();
                 storageManager = require('../lib/storage-manager'); // eslint-disable-line
                 const configNow = localConfig || config
-                configNow.storageAdapters[adapter].connection=configNow[adapter]
+                configNow.storageAdapters[adapter].connection = configNow[adapter]
                 configNow.defaultStorage = adapter;
                 await storageManager.init(configNow, null, true);
             });
@@ -313,6 +313,34 @@ describe('storage-manager tests', () => {
                     expect(keysAfter.length).to.equal(0);
                 });
             });
+
+
+            describe.only(name + ':hkube-algo-metrics', () => {
+                it('get pipelines and nodes', async () => {
+                    if (['redis', 'etcd'].indexOf(adapter) > -1) {
+                        return;
+                    }
+                    for (let i = 0; i < 2; i++) {
+                        for (let j = 0; j <= 2; j++) {
+                            const jobId = 'job' + i;
+                            const pipelineName = 'pl' + i;
+                            const nodeName = 'nn' + j;
+                            const taskId = 'task' + j;
+                            const fileName = 'fN';
+                            const data = { test: 'test' + j };
+                            await storageManager.hkubeAlgoMetrics.put({ jobId, taskId, pipelineName, nodeName, fileName, data })
+                        }
+                    }
+                    const res1 = await storageManager.hkubeAlgoMetrics.listPipelines();
+                    expect(res1.length).to.equal(2);
+                    expect(res1).to.contain('pl1');
+                    const res2 = await storageManager.hkubeAlgoMetrics.listNodes(res1[1]);
+                    expect(res2.length).to.equal(3);
+                    expect(res2).to.contain('nn1');
+
+                });
+            });
+
             describe(name + ':hkube-executions', () => {
                 it('get and put string', async () => {
                     const jobId = uuid();
