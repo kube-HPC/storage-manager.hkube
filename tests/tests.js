@@ -315,7 +315,7 @@ describe('storage-manager tests', () => {
             });
 
 
-            describe.only(name + ':hkube-algo-metrics', () => {
+            describe(name + ':hkube-algo-metrics', () => {
                 it('get pipelines and nodes', async () => {
                     if (['redis', 'etcd'].indexOf(adapter) > -1) {
                         return;
