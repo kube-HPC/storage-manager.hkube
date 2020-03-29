@@ -22,7 +22,7 @@
   "author": "Hkube",
   "license": "MIT",
   "dependencies": {
-    "@hkube/encoding": "^1.0.3",
+    "@hkube/encoding": "^1.0.7",
     "@hkube/etcd-adapter": "^1.0.12",
     "@hkube/fs-adapter": "^1.0.31",
     "@hkube/logger": "^1.0.25",
