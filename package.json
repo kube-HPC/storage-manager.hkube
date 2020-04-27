@@ -22,17 +22,17 @@
   "author": "Hkube",
   "license": "MIT",
   "dependencies": {
-    "@hkube/encoding": "^1.0.9",
+    "@hkube/encoding": "^1.0.11",
     "@hkube/etcd-adapter": "^1.0.12",
-    "@hkube/fs-adapter": "^2.0.2",
-    "@hkube/logger": "^1.0.25",
+    "@hkube/fs-adapter": "^2.0.3",
     "@hkube/redis-storage-adapter": "^1.0.11",
-    "@hkube/s3-adapter": "^2.0.4",
+    "@hkube/s3-adapter": "^2.0.5",
+    "@hkube/units-converter": "^1.0.15",
     "moment": "^2.24.0",
-    "performance-now": "^2.1.0"
+    "performance-now": "^2.1.0",
+    "pretty-bytes": "^5.3.0"
   },
   "devDependencies": {
-    "@hkube/config": "^2.0.7",
     "chai": "^4.2.0",
     "coveralls": "^3.0.13",
     "eslint": "^6.8.0",
