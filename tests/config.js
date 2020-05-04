@@ -29,18 +29,18 @@ config.fs = {
 };
 
 config.storageAdapters = {
-    // s3: {
-    //     connection: config.s3,
-    //     moduleName: process.env.STORAGE_MODULE || '@hkube/s3-adapter'
-    // },
-    // etcd: {
-    //     connection: config.etcd,
-    //     moduleName: process.env.STORAGE_MODULE || '@hkube/etcd-adapter'
-    // },
-    // redis: {
-    //     connection: config.redis,
-    //     moduleName: process.env.STORAGE_MODULE || '@hkube/redis-storage-adapter'
-    // },
+    s3: {
+        connection: config.s3,
+        moduleName: process.env.STORAGE_MODULE || '@hkube/s3-adapter'
+    },
+    etcd: {
+        connection: config.etcd,
+        moduleName: process.env.STORAGE_MODULE || '@hkube/etcd-adapter'
+    },
+    redis: {
+        connection: config.redis,
+        moduleName: process.env.STORAGE_MODULE || '@hkube/redis-storage-adapter'
+    },
     fs: {
         connection: config.fs,
         moduleName: process.env.STORAGE_MODULE || '@hkube/fs-adapter'
