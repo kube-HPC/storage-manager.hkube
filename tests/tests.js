@@ -3,12 +3,32 @@ const uuid = require('uuid/v4');
 const path = require('path');
 const mockery = require('mockery');
 const moment = require('moment');
-const { EncodingTypes } = require('@hkube/encoding');
+const { EncodingTypes, Encoding } = require('@hkube/encoding');
 const config = require('./config');
 const fs = require('fs-extra');
-const { STORAGE_PREFIX } = require('../consts/storage-prefix');
-const baseDir = config.fs.baseDirectory;
 let storageManager;
+
+const readStreamAsBuffer = (srteam) => {
+    return new Promise((res) => {
+        const bufs = [];
+        srteam.on('data', (d) => { bufs.push(d); });
+        srteam.on('end', () => {
+            res(Buffer.concat(bufs));
+        });
+    });
+}
+
+const readStreamAsString = (srteam) => {
+    return new Promise((res) => {
+        let bufs = '';
+        srteam.on('data', (d) => {
+            bufs += d.toString('utf8');
+        });
+        srteam.on('end', () => {
+            res(bufs);
+        });
+    });
+}
 
 describe('storage-manager tests', () => {
     Object.entries(config.storageAdapters).forEach(([k, v]) => {
@@ -435,12 +455,25 @@ describe('storage-manager tests', () => {
                         expect(keysAfter.length).to.equal(0);
                     });
                 });
+                describe(name + ':hkube-getCustomStream', () => {
+                    if (['redis', 'etcd'].indexOf(name) > -1) {
+                        return;
+                    }
+                    it('should custom encode: true and value: object', async () => {
+                        const jobId = `jobId-${uuid()}`;
+                        const taskId = `taskId-${uuid()}`;
+                        const data = { mydata: 'myData', myProp: 'myProp', value: "newstrvalue" };
+                        const path = storageManager.hkube.createPath({ jobId, taskId });
+                        const result = await storageManager.storage.put({ path, data, encodeOptions: { customEncode: true } });
+                        const stream = await storageManager.getCustomStream(result);
+                        const res = await readStreamAsString(stream);
+                        expect(res).to.eql(JSON.stringify(data));
+                    });
+                });
             });
         });
     });
     after(() => {
-        const config = require('./config');
-        const sp = Object.values(STORAGE_PREFIX).map(x => config.clusterName + '-' + x);
-        Object.values(sp).forEach(dir => fs.removeSync(path.join(baseDir, dir)));
+        fs.removeSync(config.fs.baseDirectory);
     });
 });
