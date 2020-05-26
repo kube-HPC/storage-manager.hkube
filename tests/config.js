@@ -21,7 +21,9 @@ config.clusterName = 'local';
 config.s3 = {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'AKIAIOSFODNN7EXAMPLE',
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY',
-    endpoint: process.env.S3_ENDPOINT_URL || 'http://127.0.0.1:9000'
+    endpoint: process.env.S3_ENDPOINT_URL || 'http://127.0.0.1:9000',
+    region: process.env.S3_REGION || '',
+    bucketName: process.env.S3_BUCKET_NAME
 };
 
 config.fs = {
