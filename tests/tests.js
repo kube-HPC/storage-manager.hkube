@@ -7,32 +7,22 @@ const { EncodingTypes, Encoding } = require('@hkube/encoding');
 const config = require('./config');
 const fs = require('fs-extra');
 let storageManager;
+const encoding = new Encoding({ type: 'msgpack' });
 
-const readStreamAsBuffer = (srteam) => {
-    return new Promise((res) => {
-        const bufs = [];
-        srteam.on('data', (d) => { bufs.push(d); });
-        srteam.on('end', () => {
-            res(Buffer.concat(bufs));
-        });
-    });
-}
-
-const readStreamAsString = (srteam) => {
+const readStreamAsString = (stream) => {
     return new Promise((res) => {
         let bufs = '';
-        srteam.on('data', (d) => {
+        stream.on('data', (d) => {
             bufs += d.toString('utf8');
         });
-        srteam.on('end', () => {
+        stream.on('end', () => {
             res(bufs);
         });
     });
 }
 
 describe('storage-manager tests', () => {
-    Object.entries(config.storageAdapters).forEach(([k, v]) => {
-        const name = k;
+    Object.keys(config.storageAdapters).forEach(name => {
         EncodingTypes.forEach((e) => {
             describe(`test start with ${name} ${e}`, () => {
                 before(async () => {
@@ -456,7 +446,7 @@ describe('storage-manager tests', () => {
                     });
                 });
                 describe(name + ':hkube-getCustomStream', () => {
-                    if (['redis', 'etcd'].indexOf(name) > -1) {
+                    if (['redis', 'etcd', 'fs'].indexOf(name) > -1 || ['json', 'bson', 'protoc'].indexOf(e) > -1) {
                         return;
                     }
                     it('should custom encode: true and value: object', async () => {
@@ -464,7 +454,8 @@ describe('storage-manager tests', () => {
                         const taskId = `taskId-${uuid()}`;
                         const data = { mydata: 'myData', myProp: 'myProp', value: "newstrvalue" };
                         const path = storageManager.hkube.createPath({ jobId, taskId });
-                        const result = await storageManager.storage.put({ path, data, encodeOptions: { customEncode: true } });
+                        const { header, payload } = encoding.encodeHeaderPayload(data);
+                        const result = await storageManager.storage.put({ path, header, data: payload, encodeOptions: { ignoreEncode: true } });
                         const stream = await storageManager.getCustomStream(result);
                         const res = await readStreamAsString(stream);
                         expect(res).to.eql(JSON.stringify(data));
