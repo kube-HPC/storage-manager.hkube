@@ -461,6 +461,22 @@ describe('storage-manager tests', () => {
                         expect(res).to.eql(JSON.stringify(data));
                     });
                 });
+                describe(name + ':hkube-getCustomData', () => {
+                    if (['redis', 'etcd', 'fs'].indexOf(name) > -1 || ['json', 'bson', 'protoc'].indexOf(e) > -1) {
+                        return;
+                    }
+                    it('should custom encode: true and value: object', async () => {
+                        const jobId = `jobId-${uuid()}`;
+                        const taskId = `taskId-${uuid()}`;
+                        const object = { mydata: 'myData', myProp: 'myProp', value: "newstrvalue" };
+                        const path = storageManager.hkube.createPath({ jobId, taskId });
+                        const { header, payload } = encoding.encodeHeaderPayload(object);
+                        const result = await storageManager.storage.put({ path, header, data: payload, encodeOptions: { ignoreEncode: true } });
+                        const { data, metadata } = await storageManager.getCustomData(result);
+                        const response = encoding.decodeHeaderPayload(metadata.header, data);
+                        expect(response).to.eql(object);
+                    });
+                });
             });
         });
     });
