@@ -470,11 +470,11 @@ describe('storage-manager tests', () => {
                         const taskId = `taskId-${uuid()}`;
                         const object = { mydata: 'myData', myProp: 'myProp', value: "newstrvalue" };
                         const path = storageManager.hkube.createPath({ jobId, taskId });
-                        const { header, payload } = encoding.encodeHeaderPayload(object);
-                        const result = await storageManager.storage.put({ path, header, data: payload, encodeOptions: { ignoreEncode: true } });
-                        const { data, metadata } = await storageManager.getCustomData(result);
-                        const response = encoding.decodeHeaderPayload(metadata.header, data);
-                        expect(response).to.eql(object);
+                        const { header, payload: pay } = encoding.encodeHeaderPayload(object);
+                        const result = await storageManager.storage.put({ path, header, data: pay, encodeOptions: { ignoreEncode: true } });
+                        const { size, payload } = await storageManager.getCustomData(result);
+                        expect(size).to.eql(47);
+                        expect(payload).to.eql(object);
                     });
                 });
             });
