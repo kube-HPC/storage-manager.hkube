@@ -10,8 +10,9 @@
     "test:s3-json": "DEFAULT_STORAGE=s3 STORAGE_ENCODING=json npm run test:run",
     "test:s3-msgpack": "DEFAULT_STORAGE=s3 STORAGE_ENCODING=msgpack npm run test:run",
     "test:run": "./node_modules/mocha/bin/_mocha tests --timeout=10000 --colors --recursive --exit",
-    "test": "npm run test:fs-json && npm run test:fs-msgpack && npm run test:s3-json && npm run test:s3-msgpack",
-    "test-travis": "./node_modules/istanbul/lib/cli.js cover npm run test",
+    "test": "NODE_ENV=test npm run test:fs-json && npm run test:fs-msgpack && npm run test:s3-json && npm run test:s3-msgpack",
+    "test:cov": "NODE_ENV=test ./node_modules/nyc/bin/nyc.js --exclude=bootstrap.js --reporter=html --reporter=text --reporter=lcov npm run test",
+    "coverage": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "build": "npm publish"
   },
   "pre-commit": {
@@ -45,9 +46,9 @@
     "eslint-plugin-chai-friendly": "^0.5.0",
     "eslint-plugin-import": "^2.20.2",
     "fs-extra": "^9.0.0",
-    "istanbul": "^1.1.0-alpha.1",
     "mocha": "^7.1.1",
     "mockery": "^2.1.0",
+    "nyc": "^15.1.0",
     "pre-commit": "^1.2.2",
     "sinon": "^9.0.2",
     "uuid": "^7.0.3"
