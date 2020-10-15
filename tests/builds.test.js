@@ -37,7 +37,7 @@ describe('Builds', () => {
         const res = await storageManager.get(storageInfo);
         expect([1, 2, 3]).to.deep.equal(res);
     });
-    it('delete by key', async () => {
+    it('delete put get stream', async () => {
         const buildId = uuid();
         const fileContent = await fs.readFile('tests/mocks/stream.yml', 'utf-8');
         const readStream = fs.createReadStream('tests/mocks/stream.yml');
