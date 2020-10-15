@@ -4,6 +4,8 @@ config.defaultStorage = process.env.DEFAULT_STORAGE || 's3';
 const useSentinel = !!process.env.REDIS_SENTINEL_SERVICE_HOST;
 const baseDir = 'tests/baseDir/';
 
+config.storageEncoding = process.env.STORAGE_ENCODING || 'bson';
+
 config.redis = {
     host: useSentinel ? process.env.REDIS_SENTINEL_SERVICE_HOST : process.env.REDIS_SERVICE_HOST || 'localhost',
     port: useSentinel ? process.env.REDIS_SENTINEL_SERVICE_PORT : process.env.REDIS_SERVICE_PORT || 6379,
@@ -33,6 +35,7 @@ config.fs = {
 config.storageAdapters = {
     s3: {
         connection: config.s3,
+        encoding: config.storageEncoding,
         moduleName: process.env.STORAGE_MODULE || '@hkube/s3-adapter'
     },
     etcd: {
@@ -45,6 +48,7 @@ config.storageAdapters = {
     },
     fs: {
         connection: config.fs,
+        encoding: config.storageEncoding,
         moduleName: process.env.STORAGE_MODULE || '@hkube/fs-adapter'
     }
 };

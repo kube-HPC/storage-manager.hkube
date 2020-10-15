@@ -5,8 +5,13 @@
   "main": "index.js",
   "scripts": {
     "lint": "./node_modules/eslint/bin/eslint.js .",
-    "test": "./node_modules/mocha/bin/_mocha tests --timeout=10000 --colors --recursive --exit",
-    "test-travis": "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha -- -R spec tests --timeout=10000 --colors --recursive --exit",
+    "test:fs-json": "DEFAULT_STORAGE=fs STORAGE_ENCODING=json npm run test:run",
+    "test:fs-msgpack": "DEFAULT_STORAGE=fs STORAGE_ENCODING=msgpack npm run test:run",
+    "test:s3-json": "DEFAULT_STORAGE=s3 STORAGE_ENCODING=json npm run test:run",
+    "test:s3-msgpack": "DEFAULT_STORAGE=s3 STORAGE_ENCODING=msgpack npm run test:run",
+    "test:run": "./node_modules/mocha/bin/_mocha tests --timeout=10000 --colors --recursive --exit",
+    "test": "npm run test:fs-json && npm run test:fs-msgpack && npm run test:s3-json && npm run test:s3-msgpack",
+    "test-travis": "./node_modules/istanbul/lib/cli.js cover npm run test",
     "build": "npm publish"
   },
   "pre-commit": {
