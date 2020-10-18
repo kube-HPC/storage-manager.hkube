@@ -1,9 +1,12 @@
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
 const fs = require('fs-extra');
 const config = require('./config');
 const storageManager = require('../lib/storage-manager');
 const { Encoding } = require('@hkube/encoding');
 
-before(async function () {
+before(async function() {
     this.timeout(15000)
     await storageManager.init(config, null, true);
     global.encoding = new Encoding({ type: config.storageEncoding });
