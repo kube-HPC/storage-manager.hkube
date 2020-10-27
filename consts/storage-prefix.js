@@ -7,6 +7,7 @@ module.exports = {
         HKUBE_EXECUTION: 'hkube-execution',
         HKUBE_INDEX: 'hkube-index',
         HKUBE_BUILDS: 'hkube-builds',
-        HKUBE_ALGO_METRICS: 'hkube-algo-metrics'
+        HKUBE_ALGO_METRICS: 'hkube-algo-metrics',
+        HKUBE_DATASOURCE: 'hkube-datasource'
     }
 };
