@@ -87,5 +87,25 @@ describe('Datasource', () => {
         const emptyList = await storageManager.hkubeDataSource.list({ dataSource });
         expect(emptyList).to.have.lengthOf(0);
     });
+    it('delete files', async () => {
+        const dataSource = uuid.v4();
+        const fileNames = new Array(5).fill(0).map(() => uuid.v4()).sort();
+        const readStream_a = fs.createReadStream('tests/mocks/stream.yml');
+        await Promise.all(
+            fileNames.map(fileName =>
+                storageManager.hkubeDataSource.putStream({ dataSource, fileName, data: readStream_a })
+            )
+        );
+        const fullList = await storageManager.hkubeDataSource.list({ dataSource });
+        const filesToDelete = fullList.slice(0, 2);
+        const filesToKeep = fullList.slice(2, fullList.length);
+        const deletedFiles = await storageManager.hkubeDataSource.deleteFiles(filesToDelete);
+        const updatedFullList = await storageManager.hkubeDataSource.list({ dataSource });
+        expect(updatedFullList).to.have.lengthOf(fullList.length - filesToDelete.length);
+        expect(updatedFullList).to.have.lengthOf(fullList.length - deletedFiles);
+
+        expect(updatedFullList.map(item => item.path))
+            .to.have.members(filesToKeep.map(item => item.path));
+    });
 });
 
